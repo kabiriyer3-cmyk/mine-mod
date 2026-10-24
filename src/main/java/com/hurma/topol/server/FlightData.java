@@ -1,22 +1,26 @@
 package com.hurma.topol.server;
-
 import com.hurma.topol.net.Packets;
+import com.hurma.topol.sim.GameRocket;
 import net.minecraft.util.math.Vec3d;
 
-/** Save-compatible data only. Game flight does not keep hundreds of chunks loaded. */
 public final class FlightData {
-    public String dimension;
+    public String dimension,silo,operator;
     public long id;
-    public double lx,ly,lz,tx,ty,tz;
-    public int age,duration;
+    public double x,y,z,vx,vy=2,vz,tx,ty,tz,lx,ly,lz;
+    public int age,waiting;
     public boolean destructive;
-    public transient boolean ticketed;
-    public Vec3d launch(){return new Vec3d(lx,ly,lz);}
+    public transient net.minecraft.util.math.ChunkPos ticket;
+    public Vec3d pos(){return new Vec3d(x,y,z);}
+    public Vec3d velocity(){return new Vec3d(vx,vy,vz);}
     public Vec3d target(){return new Vec3d(tx,ty,tz);}
-    public Packets.Flight packet(){return new Packets.Flight(dimension,id,launch(),target(),age,duration,destructive);}
-    public boolean valid() {
-        return dimension!=null&&dimension.length()<128&&duration>=1600&&duration<=5000&&age>=0&&age<=duration+20&&
-                Double.isFinite(lx+ly+lz+tx+ty+tz)&&Math.abs(lx)<3e7&&Math.abs(lz)<3e7&&Math.abs(tx)<3e7&&Math.abs(tz)<3e7&&
-                Math.abs(ly)<4096&&Math.abs(ty)<4096;
+    public Packets.Flight packet(){return new Packets.Flight(dimension,id,pos(),velocity(),age);}
+    public GameRocket.Step next(){
+        return GameRocket.step(new GameRocket.V(x,y,z),new GameRocket.V(vx,vy,vz),new GameRocket.V(tx,ty,tz),age);
+    }
+    public void target(Vec3d p){tx=p.x;ty=p.y;tz=p.z;}
+    public boolean valid(){
+        return dimension!=null&&silo!=null&&operator!=null&&dimension.length()<128&&silo.length()<64&&operator.length()<64&&
+                Double.isFinite(x+y+z+vx+vy+vz+tx+ty+tz+lx+ly+lz)&&Math.abs(x)<3e7&&Math.abs(z)<3e7&&
+                Math.abs(y)<4096&&Math.abs(tx)<3e7&&Math.abs(tz)<3e7&&Math.abs(ty)<4096&&age>=0&&age<=GameRocket.MAX_TICKS;
     }
 }

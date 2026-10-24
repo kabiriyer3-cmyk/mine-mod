@@ -1,19 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
+    " I ",
     "IPI",
-    "IRI",
     "BBB"
   ],
   "key": {
     "I": {
-      "item": "minecraft:iron_block"
+      "item": "minecraft:iron_ingot"
     },
     "P": {
       "item": "minecraft:piston"
-    },
-    "R": {
-      "item": "minecraft:redstone_block"
     },
     "B": {
       "item": "minecraft:black_concrete"

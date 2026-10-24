@@ -11,16 +11,16 @@ public final class TopolConfig {
     public boolean enableDestruction=true;
     public boolean ownerLock=true;
     public boolean breakUnbreakable=false;
-    public int minRange=128, maxRange=24000;
+    public int minRange=32, maxRange=1024;
     public int maxConcurrentFlights=4, maxConcurrentBlasts=2, maxLaunchersPerWorld=64;
-    public int craterRadius=64, craterDepth=26, destructionRadius=160, thermalRadius=240;
+    public int craterRadius=6, craterDepth=3, destructionRadius=16, thermalRadius=24;
     public int blockChangesPerTick=2500, blockChecksPerTick=12000, blastMillisPerTick=7;
-    public int particleLimit=2400, meshDebrisLimit=40, effectsDistance=6000;
-    public float effectDensity=1.0f, soundVolume=1.0f, cameraShake=0.7f, flashStrength=0.65f;
-    public boolean enableFlash=true, enableCameraShake=true;
+    public int particleLimit=1600, meshDebrisLimit=24, effectsDistance=2400;
+    public float effectDensity=1.0f, soundVolume=1.0f, cameraShake=0.5f, flashStrength=0.12f;
+    public boolean enableFlash=false, enableCameraShake=true;
 
     public static TopolConfig load() {
-        Path p=FabricLoader.getInstance().getConfigDir().resolve("topol.json");
+        Path p=FabricLoader.getInstance().getConfigDir().resolve("solo-silo.json");
         Gson gson=new GsonBuilder().setPrettyPrinting().create();
         TopolConfig c=new TopolConfig();
         if(Files.isRegularFile(p)) {
@@ -42,12 +42,12 @@ public final class TopolConfig {
     private static int clamp(int v,int a,int b) {return Math.max(a,Math.min(b,v));}
     private static float clamp(float v,float a,float b) {return Float.isFinite(v)?Math.max(a,Math.min(b,v)):a;}
     private void clamp() {
-        minRange=clamp(minRange,64,2000); maxRange=clamp(maxRange,minRange+1,60000);
+        minRange=clamp(minRange,24,128); maxRange=clamp(maxRange,minRange+1,2048);
         maxConcurrentFlights=clamp(maxConcurrentFlights,1,16); maxConcurrentBlasts=clamp(maxConcurrentBlasts,1,4);
         maxLaunchersPerWorld=clamp(maxLaunchersPerWorld,1,512);
-        craterRadius=clamp(craterRadius,8,128); craterDepth=clamp(craterDepth,4,100);
-        destructionRadius=clamp(destructionRadius,craterRadius,256);
-        thermalRadius=clamp(thermalRadius,destructionRadius,384);
+        craterRadius=clamp(craterRadius,2,16); craterDepth=clamp(craterDepth,1,8);
+        destructionRadius=clamp(destructionRadius,craterRadius,32);
+        thermalRadius=clamp(thermalRadius,destructionRadius,48);
         blockChangesPerTick=clamp(blockChangesPerTick,100,10000);
         blockChecksPerTick=clamp(blockChecksPerTick,blockChangesPerTick,50000);
         blastMillisPerTick=clamp(blastMillisPerTick,1,20);

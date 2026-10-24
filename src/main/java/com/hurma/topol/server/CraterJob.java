@@ -37,8 +37,8 @@ public final class CraterJob {
         return j;
     }
     public boolean valid() {
-        return dimension!=null&&dimension.length()<128&&crater>=8&&crater<=128&&depth>=1&&depth<=100&&
-                destruction>=crater&&destruction<=256&&thermal>=destruction&&thermal<=384&&cursor>=0&&
+        return dimension!=null&&dimension.length()<128&&crater>=2&&crater<=16&&depth>=1&&depth<=8&&
+                destruction>=crater&&destruction<=32&&thermal>=destruction&&thermal<=48&&cursor>=0&&
                 cursor<=(2*thermal+1)*(2*thermal+1)&&Math.abs((long)cx)<30000000&&Math.abs((long)cz)<30000000&&
                 Math.abs((long)cy)<4096&&age>=0&&Float.isFinite(wave)&&
                 (currentY==Integer.MIN_VALUE||Math.abs((long)currentY)<4096)&&
@@ -74,13 +74,13 @@ public final class CraterJob {
                 top=w.getTopY(Heightmap.Type.WORLD_SURFACE,x,z);
                 if(bowl) {
                     low=Math.max(w.getBottomY()+1,BlastShape.floor(cy,d,crater,depth,dx,dz,id)-1);
-                    currentY=Math.max(low,Math.min(w.getTopY()-1,top));
+                    currentY=Math.max(low,Math.min(w.getTopY()-1,Math.min(top,cy+destruction)));
                 } else if(lip) {
                     low=Math.max(w.getBottomY()+1,top-1);
-                    currentY=Math.min(w.getTopY()-1,top+Math.max(0,(int)(4*(1-(d-crater)/(crater*.13)))));
+                    currentY=Math.min(w.getTopY()-1,Math.min(cy+1,top+1));
                 } else {
                     low=Math.max(w.getBottomY()+1,cy-4);
-                    currentY=Math.min(w.getTopY()-1,Math.max(top,low));
+                    currentY=Math.min(w.getTopY()-1,Math.min(cy+destruction,Math.max(top,low)));
                 }
             }
             while(currentY>=low&&checks<maxChecks&&edits<maxChanges&&System.nanoTime()<deadline) {
@@ -89,18 +89,19 @@ public final class CraterJob {
                 checks++;
                 if(!protectedBlock(w,pos,old)) {
                     double n=BlastShape.noise(x,currentY*31+z,id);
-                    if(bowl) {
+                    double radial=Math.sqrt(d*d+(currentY-cy)*(double)(currentY-cy));
+                    if(bowl&&Math.abs(currentY-cy)<=destruction) {
                         if(currentY>low+1) {if(!old.isAir())replacement=Blocks.AIR.getDefaultState();}
-                        else replacement=(n>.45?Topol.TRINITITE:Topol.SCORCHED_EARTH).getDefaultState();
-                    } else if(lip) {
-                        replacement=(n>.8?Blocks.BASALT:Topol.SCORCHED_EARTH).getDefaultState();
+                        else if(currentY<top)replacement=(n>.6?Blocks.COARSE_DIRT:Topol.SCORCHED_EARTH).getDefaultState();
+                    } else if(lip&&Math.abs(currentY-cy)<depth+1) {
+                        replacement=(n>.6?Blocks.COARSE_DIRT:Topol.SCORCHED_EARTH).getDefaultState();
                     } else if(!old.isAir()) {
-                        if(d<=destruction) {
-                            double strength=4+100*Math.pow(1-d/destruction,2);
+                        if(radial<=destruction) {
+                            double strength=4+70*Math.pow(1-radial/destruction,2);
                             if(old.getBlock().getBlastResistance()<strength)replacement=Blocks.AIR.getDefaultState();
-                        } else if(old.isIn(BlockTags.LEAVES)||old.isIn(BlockTags.SAPLINGS)) {
+                        } else if(radial<=thermal&&(old.isIn(BlockTags.LEAVES)||old.isIn(BlockTags.SAPLINGS))) {
                             if(n<(thermal-d)/Math.max(1.0,thermal-destruction))replacement=Blocks.AIR.getDefaultState();
-                        } else if(currentY==top-1 && n<.65*(thermal-d)/thermal && old.getFluidState().isEmpty()) {
+                        } else if(radial<=thermal&&currentY==top-1 && n<.35*(thermal-d)/thermal && old.getFluidState().isEmpty()) {
                             replacement=Topol.SCORCHED_EARTH.getDefaultState();
                         }
                     }

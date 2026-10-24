@@ -31,6 +31,6 @@ jobs:
           path: build/reports/tests/
       - uses: actions/upload-artifact@v4
         with:
-          name: topol-jar
+          name: solo-silo-jar
           path: build/libs/*.jar
           if-no-files-found: error

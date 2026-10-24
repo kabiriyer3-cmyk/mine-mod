@@ -1,37 +1,9 @@
 {
-  "hydraulics": {
-    "subtitle": "subtitles.topol.hydraulics",
-    "sounds": [
-      {
-        "name": "topol:hydraulics",
-        "stream": false
-      }
-    ]
-  },
-  "diesel": {
-    "subtitle": "subtitles.topol.diesel",
-    "sounds": [
-      {
-        "name": "topol:diesel",
-        "stream": false
-      }
-    ]
-  },
   "clunk": {
     "subtitle": "subtitles.topol.clunk",
     "sounds": [
       {
-        "name": "topol:clunk",
-        "stream": false
-      }
-    ]
-  },
-  "siren": {
-    "subtitle": "subtitles.topol.siren",
-    "sounds": [
-      {
-        "name": "topol:siren",
-        "stream": false
+        "name": "topol:clunk"
       }
     ]
   },
@@ -39,8 +11,7 @@
     "subtitle": "subtitles.topol.cap",
     "sounds": [
       {
-        "name": "topol:cap",
-        "stream": false
+        "name": "topol:cap"
       }
     ]
   },
@@ -48,8 +19,7 @@
     "subtitle": "subtitles.topol.eject",
     "sounds": [
       {
-        "name": "topol:eject",
-        "stream": false
+        "name": "topol:eject"
       }
     ]
   },
@@ -57,8 +27,7 @@
     "subtitle": "subtitles.topol.ignition",
     "sounds": [
       {
-        "name": "topol:ignition",
-        "stream": false
+        "name": "topol:ignition"
       }
     ]
   },
@@ -66,8 +35,7 @@
     "subtitle": "subtitles.topol.roar_near",
     "sounds": [
       {
-        "name": "topol:roar_near",
-        "stream": false
+        "name": "topol:roar_near"
       }
     ]
   },
@@ -75,17 +43,7 @@
     "subtitle": "subtitles.topol.roar_far",
     "sounds": [
       {
-        "name": "topol:roar_far",
-        "stream": false
-      }
-    ]
-  },
-  "stage_sep": {
-    "subtitle": "subtitles.topol.stage_sep",
-    "sounds": [
-      {
-        "name": "topol:stage_sep",
-        "stream": false
+        "name": "topol:roar_far"
       }
     ]
   },
@@ -93,8 +51,7 @@
     "subtitle": "subtitles.topol.sonic_boom",
     "sounds": [
       {
-        "name": "topol:sonic_boom",
-        "stream": false
+        "name": "topol:sonic_boom"
       }
     ]
   },
@@ -102,8 +59,7 @@
     "subtitle": "subtitles.topol.blast_near",
     "sounds": [
       {
-        "name": "topol:blast_near",
-        "stream": false
+        "name": "topol:blast_near"
       }
     ]
   },
@@ -111,8 +67,7 @@
     "subtitle": "subtitles.topol.blast_far",
     "sounds": [
       {
-        "name": "topol:blast_far",
-        "stream": false
+        "name": "topol:blast_far"
       }
     ]
   },
@@ -120,8 +75,7 @@
     "subtitle": "subtitles.topol.ui_beep",
     "sounds": [
       {
-        "name": "topol:ui_beep",
-        "stream": false
+        "name": "topol:ui_beep"
       }
     ]
   },
@@ -129,8 +83,7 @@
     "subtitle": "subtitles.topol.ui_confirm",
     "sounds": [
       {
-        "name": "topol:ui_confirm",
-        "stream": false
+        "name": "topol:ui_confirm"
       }
     ]
   },
@@ -138,8 +91,7 @@
     "subtitle": "subtitles.topol.ui_error",
     "sounds": [
       {
-        "name": "topol:ui_error",
-        "stream": false
+        "name": "topol:ui_error"
       }
     ]
   },
@@ -147,8 +99,7 @@
     "subtitle": "subtitles.topol.earth",
     "sounds": [
       {
-        "name": "topol:earth",
-        "stream": false
+        "name": "topol:earth"
       }
     ]
   }

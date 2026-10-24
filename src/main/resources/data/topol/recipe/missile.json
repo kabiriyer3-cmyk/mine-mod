@@ -3,14 +3,14 @@
   "pattern": [
     " I ",
     "IRI",
-    "IGI"
+    " G "
   ],
   "key": {
     "I": {
       "item": "minecraft:iron_ingot"
     },
     "R": {
-      "item": "minecraft:redstone_block"
+      "item": "minecraft:redstone"
     },
     "G": {
       "item": "minecraft:gunpowder"

@@ -1,40 +1,29 @@
 package com.hurma.topol.net;
-
 import com.hurma.topol.Topol;
-import com.hurma.topol.entity.LauncherEntity;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
-/** Small bounded messages. No client packet can create a flight or a crater directly. */
+/** Only server-to-client packets; targeting uses the native server item-use state. */
 public final class Packets {
-    private Packets() {}
-    private static void vec(RegistryByteBuf b,Vec3d p) {b.writeDouble(p.x);b.writeDouble(p.y);b.writeDouble(p.z);}
-    private static Vec3d vec(RegistryByteBuf b) {return new Vec3d(b.readDouble(),b.readDouble(),b.readDouble());}
-
-    public record Control(int entity,int action,int x,int z,int payload,long token) implements CustomPayload {
-        public static final Id<Control> ID=new Id<>(Topol.id("control"));
-        public static final PacketCodec<RegistryByteBuf,Control> CODEC=PacketCodec.of(Control::write,Control::read);
-        private void write(RegistryByteBuf b) {b.writeVarInt(entity);b.writeByte(action);b.writeInt(x);b.writeInt(z);b.writeByte(payload);b.writeLong(token);}
-        private static Control read(RegistryByteBuf b) {return new Control(b.readVarInt(),b.readUnsignedByte(),b.readInt(),b.readInt(),b.readUnsignedByte(),b.readLong());}
-        @Override public Id<? extends CustomPayload> getId(){return ID;}
-    }
-    public record Console(int entity,int result,long token,int minRange,int maxRange) implements CustomPayload {
-        public static final Id<Console> ID=new Id<>(Topol.id("console"));
-        public static final PacketCodec<RegistryByteBuf,Console> CODEC=PacketCodec.of(Console::write,Console::read);
-        private void write(RegistryByteBuf b){b.writeVarInt(entity);b.writeByte(result);b.writeLong(token);b.writeVarInt(minRange);b.writeVarInt(maxRange);}
-        private static Console read(RegistryByteBuf b){return new Console(b.readVarInt(),b.readUnsignedByte(),b.readLong(),b.readVarInt(),b.readVarInt());}
-        @Override public Id<? extends CustomPayload> getId(){return ID;}
-    }
-    public record Flight(String dimension,long id,Vec3d launch,Vec3d target,int age,int duration,boolean destructive) implements CustomPayload {
-        public static final Id<Flight> ID=new Id<>(Topol.id("flight"));
+    private Packets(){}
+    private static void vec(RegistryByteBuf b,Vec3d p){b.writeDouble(p.x);b.writeDouble(p.y);b.writeDouble(p.z);}
+    private static Vec3d vec(RegistryByteBuf b){return new Vec3d(b.readDouble(),b.readDouble(),b.readDouble());}
+    public record Flight(String dimension,long id,Vec3d pos,Vec3d velocity,int age) implements CustomPayload {
+        public static final Id<Flight> ID=new Id<>(Topol.id("silo_flight"));
         public static final PacketCodec<RegistryByteBuf,Flight> CODEC=PacketCodec.of(Flight::write,Flight::read);
-        private void write(RegistryByteBuf b){b.writeString(dimension,128);b.writeLong(id);vec(b,launch);vec(b,target);b.writeVarInt(age);b.writeVarInt(duration);b.writeBoolean(destructive);}
-        private static Flight read(RegistryByteBuf b){return new Flight(b.readString(128),b.readLong(),vec(b),vec(b),b.readVarInt(),b.readVarInt(),b.readBoolean());}
+        private void write(RegistryByteBuf b){b.writeString(dimension,128);b.writeLong(id);vec(b,pos);vec(b,velocity);b.writeVarInt(age);}
+        private static Flight read(RegistryByteBuf b){return new Flight(b.readString(128),b.readLong(),vec(b),vec(b),b.readVarInt());}
+        @Override public Id<? extends CustomPayload> getId(){return ID;}
+    }
+    public record Aim(Vec3d point,boolean valid,boolean flying,int heldTicks) implements CustomPayload {
+        public static final Id<Aim> ID=new Id<>(Topol.id("silo_aim"));
+        public static final PacketCodec<RegistryByteBuf,Aim> CODEC=PacketCodec.of(Aim::write,Aim::read);
+        private void write(RegistryByteBuf b){vec(b,point);b.writeBoolean(valid);b.writeBoolean(flying);b.writeVarInt(heldTicks);}
+        private static Aim read(RegistryByteBuf b){return new Aim(vec(b),b.readBoolean(),b.readBoolean(),b.readVarInt());}
         @Override public Id<? extends CustomPayload> getId(){return ID;}
     }
     public record Impact(String dimension,long id,Vec3d pos,int crater,int destruction,int thermal,boolean destructive,int age) implements CustomPayload {
@@ -51,7 +40,6 @@ public final class Packets {
         private static Wave read(RegistryByteBuf b){return new Wave(b.readLong(),b.readFloat(),b.readBoolean());}
         @Override public Id<? extends CustomPayload> getId(){return ID;}
     }
-    /** 0 cap, 1 eject, 3 hydraulics, 4 lock, 5 siren. */
     public record Effect(int kind,Vec3d pos,float yaw,long seed) implements CustomPayload {
         public static final Id<Effect> ID=new Id<>(Topol.id("effect"));
         public static final PacketCodec<RegistryByteBuf,Effect> CODEC=PacketCodec.of(Effect::write,Effect::read);
@@ -59,29 +47,15 @@ public final class Packets {
         private static Effect read(RegistryByteBuf b){return new Effect(b.readUnsignedByte(),vec(b),b.readFloat(),b.readLong());}
         @Override public Id<? extends CustomPayload> getId(){return ID;}
     }
-    public static void register() {
-        PayloadTypeRegistry.playC2S().register(Control.ID,Control.CODEC);
-        PayloadTypeRegistry.playS2C().register(Console.ID,Console.CODEC);
+    public static void register(){
         PayloadTypeRegistry.playS2C().register(Flight.ID,Flight.CODEC);
+        PayloadTypeRegistry.playS2C().register(Aim.ID,Aim.CODEC);
         PayloadTypeRegistry.playS2C().register(Impact.ID,Impact.CODEC);
         PayloadTypeRegistry.playS2C().register(Wave.ID,Wave.CODEC);
         PayloadTypeRegistry.playS2C().register(Effect.ID,Effect.CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(Control.ID,(p,ctx)->{
-            ServerPlayerEntity player=ctx.player();
-            ctx.server().execute(()->{
-                if(player.isSpectator())return;
-                var e=player.getServerWorld().getEntityById(p.entity());
-                if(e instanceof LauncherEntity launcher && !launcher.isRemoved()) launcher.control(player,p);
-            });
-        });
     }
-    public static void send(ServerWorld world,CustomPayload packet) {
-        for(ServerPlayerEntity p:world.getPlayers()) if(ServerPlayNetworking.canSend(p,packet.getId())) ServerPlayNetworking.send(p,packet);
+    public static void send(ServerWorld w,CustomPayload packet){
+        for(var p:w.getPlayers())if(ServerPlayNetworking.canSend(p,packet.getId()))ServerPlayNetworking.send(p,packet);
     }
-    public static void console(ServerPlayerEntity player,int id,int result,long token) {
-        ServerPlayNetworking.send(player,new Console(id,result,token,Topol.CONFIG.minRange,Topol.CONFIG.maxRange));
-    }
-    public static void effect(ServerWorld world,int kind,Vec3d p,float yaw,long seed) {
-        send(world,new Effect(kind,p,yaw,seed));
-    }
+    public static void effect(ServerWorld w,int kind,Vec3d p,float yaw,long seed){send(w,new Effect(kind,p,yaw,seed));}
 }
