@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "topol",
+  "version": "${version}",
+  "name": "Topol: Cinematic Launcher",
+  "description": "Stationary wheeled launcher, cold launch, three visible stages, original HD textures, custom VFX/audio and budgeted block destruction. Cinematic game physics, not an engineering simulator.",
+  "authors": ["hurma"],
+  "license": "MIT",
+  "icon": "assets/topol/icon.png",
+  "environment": "*",
+  "mixins": [{"config": "topol.client.mixins.json", "environment": "client"}],
+  "entrypoints": {
+    "main": ["com.hurma.topol.Topol"],
+    "client": ["com.hurma.topol.client.TopolClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "1.21.1",
+    "java": ">=21",
+    "fabric-api": ">=0.116.4"
+  }
+}
