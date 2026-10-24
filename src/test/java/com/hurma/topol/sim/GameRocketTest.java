@@ -44,4 +44,18 @@ public class GameRocketTest {
         }
         assertEquals(1,center,0);
     }
+    /** v0.4 silo: the round starts with its nozzle 6.6 blocks down the shaft and must leave it vertically. */
+    @Test public void buriedStartLeavesShaftVertically(){
+        GameRocket.V p=new GameRocket.V(0,-6.6,0),v=new GameRocket.V(0,2,0),t=new GameRocket.V(500,0,0);
+        double peak=-10;int reached=-1;
+        for(int age=0;age<240&&reached<0;age++){
+            var s=GameRocket.step(p,v,t,age);
+            if(age<GameRocket.CLEARANCE_TICKS){assertEquals(0,s.position().x(),1e-9);assertEquals(0,s.position().z(),1e-9);}
+            double f=GameRocket.closestFraction(p,s.position(),t);
+            if(p.add(s.position().sub(p).mul(f)).sub(t).length()<1)reached=age;
+            p=s.position();v=s.velocity();peak=Math.max(peak,p.y());
+        }
+        assertTrue(reached>0&&reached<70,"500 blocks in about 3 s, got "+reached);
+        assertTrue(peak<45,"low arc, peak "+peak);
+    }
 }

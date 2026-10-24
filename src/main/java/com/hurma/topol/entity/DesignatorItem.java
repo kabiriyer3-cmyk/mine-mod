@@ -30,7 +30,7 @@ public final class DesignatorItem extends Item {
         return stack.getOrDefault(DataComponentTypes.CUSTOM_DATA,NbtComponent.DEFAULT).copyNbt().getString("Dimension");
     }
     @Override public int getMaxUseTime(ItemStack stack,LivingEntity user){return USE_TICKS;}
-    @Override public UseAction getUseAction(ItemStack stack){return UseAction.BOW;}
+    @Override public UseAction getUseAction(ItemStack stack){return UseAction.NONE;} // steady hold, no bow-draw pose
     @Override public TypedActionResult<ItemStack> use(World w,PlayerEntity user,Hand hand){
         ItemStack stack=user.getStackInHand(hand);
         if(silo(stack)==null){if(!w.isClient)LauncherEntity.message(user,"unbound");return TypedActionResult.fail(stack);}

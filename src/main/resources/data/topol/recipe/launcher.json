@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " I ",
     "IPI",
+    "ICI",
     "BBB"
   ],
   "key": {
@@ -10,10 +10,13 @@
       "item": "minecraft:iron_ingot"
     },
     "P": {
+      "item": "minecraft:iron_trapdoor"
+    },
+    "C": {
       "item": "minecraft:piston"
     },
     "B": {
-      "item": "minecraft:black_concrete"
+      "item": "minecraft:smooth_stone"
     }
   },
   "result": {

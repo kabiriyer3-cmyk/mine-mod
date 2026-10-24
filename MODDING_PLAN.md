@@ -1,3 +1,5 @@
+> **0.4.0 note:** art direction replaced. Visuals now come from CC BY 4.0 artist models (see THIRD_PARTY_NOTICES.md and MODLOG.md). Gameplay plan below still applies.
+
 # Solo Silo, новый объём
 
 Цель: мод Minecraft Fabric 1.21.1 с маленьким одиночным контейнером, ручной меткой цели, быстрой одноступенчатой игровой ракетой и обычным разрушительным попаданием.

@@ -16,6 +16,7 @@ public final class TopolClient implements ClientModInitializer {
     private static ClientWorld lastWorld;
     @Override public void onInitializeClient(){
         EntityRendererRegistry.register(Topol.LAUNCHER,LauncherRenderer::new);
+        BuiltinItemRendererRegistry.INSTANCE.register(Topol.DESIGNATOR,new DesignatorRenderer());
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener(){
             @Override public Identifier getFabricId(){return Topol.id("silo_meshes");}
             @Override public void reload(ResourceManager m){TMesh.clear();}

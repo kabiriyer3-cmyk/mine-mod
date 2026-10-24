@@ -34,3 +34,14 @@
 В ZIP нет чужих игровых ассетов, приватных API-заглушек, оригиналов Minecraft, сохранений или секретов. Репозитории пользователя не менялись, публикация не выполнялась.
 
 Следующий шаг: GitHub Actions, затем TEST_CHECKLIST в копии мира.
+
+
+## 0.4.0-rc1 (2026-10-24)
+
+- Full art rework requested by the user ("looks terrible"): procedural meshes replaced by CC BY 4.0 artist models (Tomahawk / RickSlash, VLS cell / DenisGLabrecque, Perst-4 / ikoval31) converted by `tools/gen_models.py`.
+- New TMSH v2 format: per-part texture, baked AO vertex colour, pivot/axis for animation. Texture LODs with linear filtering.
+- Silo is now embedded: entity on the surface, 1x7 shaft column carved on placement and restored on pickup; hatch animation; stowed round visible when the hatch opens.
+- Launch sequence with 1.5 s hatch/ignition delay; missile tail starts 6.6 blocks down; roll programme; fins, wings and intake deploy; booster separates as a tumbling mesh.
+- New smoke atlas (cauliflower puffs), new launch/flight/impact VFX, new synthesized sounds.
+- Designator is a 3D builtin item (Fabric BuiltinItemRendererRegistry); use action NONE (steady hold).
+- Approved software preview: docs/silo-preview.jpg.

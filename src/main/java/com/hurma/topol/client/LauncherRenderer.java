@@ -7,16 +7,20 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
+/** Embedded silo: concrete headworks, VLS cell canister in the shaft, animated hatch, stowed round when loaded. */
 public final class LauncherRenderer extends EntityRenderer<LauncherEntity>{
     public LauncherRenderer(EntityRendererFactory.Context c){super(c);shadowRadius=0;}
-    @Override public Identifier getTexture(LauncherEntity e){return TMesh.texture("launcher",0);}
+    @Override public Identifier getTexture(LauncherEntity e){return TMesh.texture("steel",0);}
     @Override public void render(LauncherEntity e,float yaw,float delta,MatrixStack m,VertexConsumerProvider b,int light){
         double d=MinecraftClient.getInstance().gameRenderer.getCamera().getPos().distanceTo(e.getPos());
-        TMesh mesh=TMesh.get("launcher",d>100?1:0);Identifier tex=TMesh.texture("launcher",d);
+        int lod=TMesh.lod(d);
         m.push();m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-e.getYaw()));
-        mesh.emit("body",m,b,tex,light,1);
-        if(e.loaded())mesh.emit("cap",m,b,tex,light,1);
-        mesh.emit("lamps",m,b,tex,light,e.loaded()?1:.18f);
+        Models.silo(m,b,lod,light,LauncherEntity.hatch(e.sinceLaunch()+delta,e.loaded()));
+        if(e.loaded()&&d<160){
+            m.push();m.translate(0,Models.STOWED_TAIL,0);
+            Models.missile(m,b,lod,light,0,0,0,true);
+            m.pop();
+        }
         m.pop();super.render(e,yaw,delta,m,b,light);
     }
 }

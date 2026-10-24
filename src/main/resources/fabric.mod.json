@@ -3,20 +3,39 @@
   "id": "topol",
   "version": "${version}",
   "name": "Solo Silo: Conventional Rockets",
-  "description": "Compact vertical game launcher, handheld designator, fast low-altitude rockets and original conventional impact VFX. Not a real-world weapon simulation.",
-  "authors": ["hurma"],
-  "license": "MIT",
+  "description": "Embedded single-round launch silo, laser designator and a fast conventional cruise missile, with custom meshes, custom smoke/fire VFX and original sounds (no vanilla particles, explosions or sounds). Models: \"BGM-109 Tomahawk missile\" by RickSlash, \"Vertical Launch System Missile Canisters\" by DenisGLabrecque, \"Zenitco Perst 4 laser pointer\" by ikoval31 (all CC BY 4.0, modified). Game physics, not a weapon simulation.",
+  "authors": [
+    "hurma"
+  ],
+  "license": [
+    "MIT",
+    "CC-BY-4.0"
+  ],
   "icon": "assets/topol/icon.png",
   "environment": "*",
-  "mixins": [{"config": "topol.client.mixins.json", "environment": "client"}],
+  "mixins": [
+    {
+      "config": "topol.client.mixins.json",
+      "environment": "client"
+    }
+  ],
   "entrypoints": {
-    "main": ["com.hurma.topol.Topol"],
-    "client": ["com.hurma.topol.client.TopolClient"]
+    "main": [
+      "com.hurma.topol.Topol"
+    ],
+    "client": [
+      "com.hurma.topol.client.TopolClient"
+    ]
   },
   "depends": {
     "fabricloader": ">=0.16.14",
     "minecraft": "1.21.1",
     "java": ">=21",
     "fabric-api": ">=0.116.4"
-  }
+  },
+  "contributors": [
+    "RickSlash (Tomahawk model, CC BY 4.0)",
+    "DenisGLabrecque (VLS canister model, CC BY 4.0)",
+    "ikoval31 (Perst-4 model, CC BY 4.0)"
+  ]
 }

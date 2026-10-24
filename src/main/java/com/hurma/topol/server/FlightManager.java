@@ -92,8 +92,9 @@ public final class FlightManager {
                     FlightData f=new FlightData();f.dimension=w.getRegistryKey().getValue().toString();f.id=UUID.randomUUID().getLeastSignificantBits();
                     f.silo=s.silo.toString();f.operator=p.getUuidAsString();Vec3d start=l.launchBase();
                     f.x=f.lx=start.x;f.y=f.ly=start.y;f.z=f.lz=start.z;f.target(trace.point);f.destructive=Topol.CONFIG.enableDestruction;
+                    f.delay=LauncherEntity.LAUNCH_DELAY;f.yaw=l.getYaw();
                     FLIGHTS.add(f);s.flight=f.id;s.fired=true;active=f;
-                    Packets.effect(w,0,l.mouth(),l.getYaw(),l.getId());Packets.effect(w,1,l.mouth(),0,f.id);
+                    Packets.effect(w,0,l.mouth(),l.getYaw(),l.getId());
                     Packets.send(w,f.packet());save();
                 }
             }
@@ -129,6 +130,11 @@ public final class FlightManager {
         });
         for(Iterator<FlightData> it=FLIGHTS.iterator();it.hasNext();){
             FlightData f=it.next();ServerWorld w=world(server,f.dimension);if(w==null)continue;
+            if(f.delay>0){
+                // Hatch opens, then the booster lights inside the canister before the round moves.
+                if(--f.delay==LauncherEntity.LAUNCH_DELAY-LauncherEntity.IGNITION)Packets.effect(w,1,new Vec3d(f.lx,f.ly+6.9,f.lz),f.yaw,f.id);
+                Packets.send(w,f.packet());continue;
+            }
             var step=f.next();Vec3d from=f.pos(),next=new Vec3d(step.position().x(),step.position().y(),step.position().z());
             if(!ready(w,f,next)){
                 if(++f.waiting>80){Packets.send(w,new Packets.Impact(f.dimension,f.id,from,0,0,0,false,0));release(w,f);it.remove();}

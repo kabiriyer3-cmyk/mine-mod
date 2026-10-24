@@ -1,30 +1,16 @@
-# Проверка 0.3.0-silo-rc1
+# Validation, 0.4.0-rc1
 
-## Выполнено
+## Done in the authoring sandbox (no internet, no Gradle, no Minecraft)
 
-- 8 независимых тестов: короткая дистанция, средняя, быстрый дальний полёт, коррекция метки, детерминизм, пересечение цели между тиками, разворот к противоположной точке, порядок колонок кратера.
-- Замеры на 32/128/256/500/1000 блоков: 1,50/1,70/2,15/2,75/3,90 секунды игрового времени после запуска.
-- Для ровной цели пик высоты примерно 34 блока. Это математические тесты, не игровой прогон.
-- Проверены TMSH: заголовки, части, конечность координат, UV, индексы, конец файла, габариты. Пусковая 3,76 блока, ракета 3,37 блока.
-- Проверены JSON, соответствие ключей ru/en, 13 моно Ogg Vorbis звуков 44,1 kHz, HD-атласы и два LOD моделей.
-- Java синтаксис и типы проверены локальным компилятором против минимальных частных API. Тестовые API не входят в ZIP и не доказывают совместимость с настоящим Minecraft/Fabric.
-- Собственный программный preview просмотрен: контейнер, ракета, концепт пульта. Не скриншот игры.
-- В новой реализации не используются прежняя траектория, отделение ступеней, ядерное облако, `createExplosion`, ванильные частицы и звуки.
+- `GameRocketTest`: 9 standalone tests pass with a JUnit-compatible runner, including the new buried-start test (round leaves the 7-block shaft vertically, 500 blocks reached in 54 ticks, peak about 26 blocks).
+- All Java sources compile (javac 17 syntax/type check) against **private API doubles** written from Yarn 1.21.1 / Fabric API 1.21.1 signatures. This catches typos and type errors only, not real Minecraft API mismatches.
+- The three TMSH v2 meshes are read successfully by the shipped Java `TMesh.read` (silo 10 parts / 4300 tris, missile 9 / 4596, designator 1 / 11074).
+- `tools/validate_assets.py`: JSON/mcmeta parse, matching en/ru keys, mesh structure and bounds, texture LOD sizes and blur metadata, mono 44.1 kHz Ogg sounds, no vanilla particle/explosion/sound calls in the source, CC BY credits present.
+- A software renderer using vanilla entity lighting produced the preview in `docs/silo-preview.jpg` from the same converted meshes and textures.
 
-## Не выполнено
+## Not verified
 
-- Gradle build/remap нового RC с настоящими Minecraft/Fabric/Yarn.
-- Загрузка клиента и dedicated server.
-- Реальное удержание предмета, наведение, столкновения, сохранение и перезапуск мира.
-- Проверка изображения, звука, FPS/TPS, Sodium/Iris/Fabulous.
-
-Рабочая оболочка не имеет интернет-доступа для получения Gradle-зависимостей. Установленного Minecraft и подключения к компьютеру пользователя нет.
-
-Следующий шаг:
-
-```sh
-python3 tools/validate_assets.py
-gradle build --no-daemon --stacktrace
-```
-
-GitHub Actions подготовлен. После успешной сборки выполнить `TEST_CHECKLIST.md` в копии мира.
+- Real Gradle/Loom build (happens in GitHub Actions).
+- Client and dedicated-server runtime, networking, saves.
+- In-game look: lighting, texture filtering, item display transforms of the 3D designator, VFX density and sorting, sound balance.
+- Compatibility with Sodium/Iris/shader packs.

@@ -37,7 +37,7 @@ public final class Topol implements ModInitializer {
         for(String name:SOUND_NAMES) SOUNDS.put(name,Registry.register(Registries.SOUND_EVENT,id(name),SoundEvent.of(id(name))));
         LAUNCHER=Registry.register(Registries.ENTITY_TYPE,id("launcher"),
                 EntityType.Builder.<LauncherEntity>create(LauncherEntity::new,SpawnGroup.MISC)
-                        .dimensions(2.1f,3.8f).maxTrackingRange(16).trackingTickInterval(1).build("topol:launcher"));
+                        .dimensions(2.6f,.3f).maxTrackingRange(16).trackingTickInterval(1).build("topol:launcher"));
         LAUNCHER_ITEM=Registry.register(Registries.ITEM,id("launcher"),new LauncherItem(new Item.Settings().maxCount(1)));
         MISSILE=Registry.register(Registries.ITEM,id("missile"),new Item(new Item.Settings().maxCount(1)));
         DESIGNATOR=Registry.register(Registries.ITEM,id("designator"),new DesignatorItem(new Item.Settings().maxCount(1)));

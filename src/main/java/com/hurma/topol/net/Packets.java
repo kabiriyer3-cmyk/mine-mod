@@ -12,11 +12,12 @@ public final class Packets {
     private Packets(){}
     private static void vec(RegistryByteBuf b,Vec3d p){b.writeDouble(p.x);b.writeDouble(p.y);b.writeDouble(p.z);}
     private static Vec3d vec(RegistryByteBuf b){return new Vec3d(b.readDouble(),b.readDouble(),b.readDouble());}
-    public record Flight(String dimension,long id,Vec3d pos,Vec3d velocity,int age) implements CustomPayload {
+    /** pos = booster nozzle (tail) of the missile; delay = ticks left in the canister before it moves. */
+    public record Flight(String dimension,long id,Vec3d pos,Vec3d velocity,int age,int delay,float yaw) implements CustomPayload {
         public static final Id<Flight> ID=new Id<>(Topol.id("silo_flight"));
         public static final PacketCodec<RegistryByteBuf,Flight> CODEC=PacketCodec.of(Flight::write,Flight::read);
-        private void write(RegistryByteBuf b){b.writeString(dimension,128);b.writeLong(id);vec(b,pos);vec(b,velocity);b.writeVarInt(age);}
-        private static Flight read(RegistryByteBuf b){return new Flight(b.readString(128),b.readLong(),vec(b),vec(b),b.readVarInt());}
+        private void write(RegistryByteBuf b){b.writeString(dimension,128);b.writeLong(id);vec(b,pos);vec(b,velocity);b.writeVarInt(age);b.writeVarInt(delay);b.writeFloat(yaw);}
+        private static Flight read(RegistryByteBuf b){return new Flight(b.readString(128),b.readLong(),vec(b),vec(b),b.readVarInt(),b.readVarInt(),b.readFloat());}
         @Override public Id<? extends CustomPayload> getId(){return ID;}
     }
     public record Aim(Vec3d point,boolean valid,boolean flying,int heldTicks) implements CustomPayload {

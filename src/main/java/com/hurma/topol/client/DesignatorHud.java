@@ -47,7 +47,10 @@ public final class DesignatorHud {
         Vec3d p=aim.point();
         float size=(float)Math.max(.12,Math.min(.8,camera.getPos().distanceTo(p)*.0015));
         RenderUtil.billboard(m.peek(),b,camera,RenderUtil.fx("glow"),true,p,size,0,false,0,.5f,1,.25f,.9f);
-        Vec3d start=mc.player.getEyePos().add(0,-.18,0);
+        // Beam leaves roughly where the first-person designator lens sits (right hand, below the eye line).
+        Vec3d look=mc.player.getRotationVec(1),right=look.crossProduct(new Vec3d(0,1,0));
+        right=right.lengthSquared()<1e-4?new Vec3d(1,0,0):right.normalize();
+        Vec3d start=mc.player.getEyePos().add(look.multiply(.6)).add(right.multiply(.22)).add(0,-.2,0);
         RenderUtil.beam(m.peek(),b,camera,RenderUtil.fx("laser"),start,p,.012f,.018f,.35f,1,.17f,.3f);
     }
 }
